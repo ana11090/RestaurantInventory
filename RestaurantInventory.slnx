@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DomainModel/DomainModel.csproj" />
+  <Project Path="RestaurantInventory/RestaurantInventory.csproj" />
+</Solution>
