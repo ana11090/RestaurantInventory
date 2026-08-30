@@ -9,7 +9,7 @@ namespace DomainModel.Model
         public string IngredientName { get; set; }
         public string IngredientType { get; set; }
         public decimal Weight { get; set; }
-        public decimal Kcal { get; set; }
+        public decimal KcalPer100g { get; set; }
         public decimal Price { get; set; }
     }
 }
