@@ -12,8 +12,7 @@ namespace DataAccessLayer
     {
         public void AddIngredient(Ingredient ingredient )
         {
-            string connectionString = ConfigurationManager
-                .ConnectionStrings["RestaurantConnectionString"].ConnectionString;
+            string connectionString = ConnectionHelper.GetConnectionStringSettings;
 
             string query = @"insert into Ingredients( ingredientName, 
                         ingredientType, weight, kcalPer100g, price) 
@@ -31,8 +30,7 @@ namespace DataAccessLayer
 
         public List<Ingredient> GetIngredients()
         {
-            string connectionString = ConfigurationManager
-                .ConnectionStrings["RestaurantConnectionString"].ConnectionString;
+            string connectionString = ConnectionHelper.GetConnectionStringSettings;
 
             string query = @"select * from Ingredients";
 

@@ -14,9 +14,11 @@ namespace RestaurantInventory.UI
 {
     public partial class IngredientsForm : Form
     {
+        private readonly IngredientsDataAccess _db;
         public IngredientsForm()
         {
             InitializeComponent();
+            _db = new IngredientsDataAccess();
         }
 
         //private void addInventoryBtn_Click(object sender, EventArgs e)
@@ -86,15 +88,15 @@ namespace RestaurantInventory.UI
 
         private void addInventoryBtn_Click(object sender, EventArgs e)
         {
-            Ingredient ingredient = new Ingredient();
-            ingredient.IngredientName = ingredientTxt.Text;
-            ingredient.IngredientType = typeIngredientTxt.Text;
-            ingredient.Weight = weightNum.Value;
-            ingredient.KcalPer100g = kcalNum.Value;
-            ingredient.Price = priceNum.Value;
-
-            IngredientsDataAccess db = new IngredientsDataAccess();
-            db.AddIngredient(ingredient);
+            Ingredient ingredient = new Ingredient(ingredientTxt.Text, typeIngredientTxt.Text,
+                 weightNum.Value, kcalNum.Value, priceNum.Value);
+            //ingredient.IngredientName = ingredientTxt.Text;
+            //ingredient.IngredientType = typeIngredientTxt.Text;
+            //ingredient.Weight = weightNum.Value;
+            //ingredient.KcalPer100g = kcalNum.Value;
+            //ingredient.Price = priceNum.Value;
+             
+            _db.AddIngredient(ingredient);
             ClearAllFields();
             RefreshIngredientsGrid();
         }
@@ -109,15 +111,30 @@ namespace RestaurantInventory.UI
         }
 
         private void RefreshIngredientsGrid()
-        {
-
-            IngredientsDataAccess db = new IngredientsDataAccess();
-            List<Ingredient> ingredients = db.GetIngredients();
+        { 
+            List<Ingredient> ingredients = _db.GetIngredients();
             ingredientsGrid.DataSource = ingredients;
         }
         private void IngredientsForm_Load(object sender, EventArgs e)
         {
             RefreshIngredientsGrid();
+            CustomizeGridAppearence();
+        }
+
+        private void CustomizeGridAppearence()
+        {
+            ingredientsGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            DataGridViewColumn[] columns = new DataGridViewColumn[6];
+            columns[0] = new DataGridViewTextBoxColumn() { DataPropertyName = "Id", Visible = false };
+            columns[1] = new DataGridViewTextBoxColumn() { DataPropertyName = "Name", HeaderText = "Name" };
+            columns[2] = new DataGridViewTextBoxColumn() { DataPropertyName = "Type", HeaderText = "Type" };
+            columns[3] = new DataGridViewTextBoxColumn() { DataPropertyName = "Weight", HeaderText = "Weight" };
+            columns[4] = new DataGridViewTextBoxColumn() { DataPropertyName = "PricePer100g", HeaderText = "Price (100g)" };
+            columns[5] = new DataGridViewTextBoxColumn() { DataPropertyName = "KcalPer100g", HeaderText = "Kcal (100g)" };
+
+            ingredientsGrid.Columns.Clear();
+            ingredientsGrid.Columns.AddRange(columns);
         }
     }
 
