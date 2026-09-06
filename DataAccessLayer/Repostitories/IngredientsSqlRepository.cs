@@ -6,9 +6,12 @@ using System.Data;
 using DomainModel.Model;
 using System.Data.SqlClient;
 using Dapper;
+using DataAccessLayer.Contracts;
+
+
 namespace DataAccessLayer
 {
-    public class IngredientsDataAccess
+    public class IngredientsSqlRepository : IIngredientsRepositories
     {
         public void AddIngredient(Ingredient ingredient )
         {
@@ -23,7 +26,7 @@ namespace DataAccessLayer
 
                 connection.Execute(query, ingredient);
             //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
-            //ingredientType, @weight, @kcalPer100g, @price", ingredient);
+            //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
             }
 
         }

@@ -6,6 +6,7 @@ namespace DomainModel.Model
 {
     public class Ingredient
     {
+        public int Id { get; set; }
         public string IngredientName { get; set; }
         public string IngredientType { get; set; }
         public decimal Weight { get; set; }

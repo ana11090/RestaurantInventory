@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataAccessLayer; 
+using DomainModel.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,18 +9,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DataAccessLayer;
-using DomainModel.Model;
+using DataAccessLayer.Contracts;
 
 namespace RestaurantInventory.UI
 {
     public partial class IngredientsForm : Form
     {
-        private readonly IngredientsDataAccess _db;
-        public IngredientsForm()
+        readonly IIngredientsRepositories _ingredientsRepository; //db access
+        public IngredientsForm(IIngredientsRepositories ingredientsRepository)
         {
             InitializeComponent();
-            _db = new IngredientsDataAccess();
+            _ingredientsRepository = ingredientsRepository;
         }
 
         //private void addInventoryBtn_Click(object sender, EventArgs e)
@@ -95,8 +96,8 @@ namespace RestaurantInventory.UI
             //ingredient.Weight = weightNum.Value;
             //ingredient.KcalPer100g = kcalNum.Value;
             //ingredient.Price = priceNum.Value;
-             
-            _db.AddIngredient(ingredient);
+
+            _ingredientsRepository.AddIngredient(ingredient);
             ClearAllFields();
             RefreshIngredientsGrid();
         }
@@ -112,7 +113,7 @@ namespace RestaurantInventory.UI
 
         private void RefreshIngredientsGrid()
         { 
-            List<Ingredient> ingredients = _db.GetIngredients();
+            List<Ingredient> ingredients = _ingredientsRepository.GetIngredients();
             ingredientsGrid.DataSource = ingredients;
         }
         private void IngredientsForm_Load(object sender, EventArgs e)

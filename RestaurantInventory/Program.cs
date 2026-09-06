@@ -1,4 +1,8 @@
+using DataAccessLayer;
+using DataAccessLayer.Contracts;
+using DataAccessLayer.Repostitories;
 using RestaurantInventory.UI;
+using System.Configuration;
 
 namespace RestaurantInventory
 {
@@ -13,7 +17,16 @@ namespace RestaurantInventory
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new IngredientsForm());
+
+            //Depency Injection - database
+            IIngredientsRepositories ingredientsRepository = null;
+
+            if (ConfigurationManager.AppSettings["repositoryType"] == "txt")
+                ingredientsRepository = new IngredientsTxtRepository();
+            else
+                ingredientsRepository = new IngredientsSqlRepository();
+
+            Application.Run(new IngredientsForm(ingredientsRepository));
         }
     }
 }
