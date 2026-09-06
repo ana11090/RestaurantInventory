@@ -3,6 +3,7 @@ using DataAccessLayer.Contracts;
 using DataAccessLayer.Repostitories;
 using RestaurantInventory.UI;
 using System.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RestaurantInventory
 {
@@ -18,15 +19,35 @@ namespace RestaurantInventory
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 
-            //Depency Injection - database
-            IIngredientsRepositories ingredientsRepository = null;
+            //Depency Injection - database - from strach
+            //IIngredientsRepositories ingredientsRepository = null;
+            //if (ConfigurationManager.AppSettings["repositoryType"] == "txt")
+            //    ingredientsRepository = new IngredientsTxtRepository();
+            //else
+            //    ingredientsRepository = new IngredientsSqlRepository();
+            //Application.Run(new IngredientsForm(ingredientsRepository));
+
+            ServiceCollection services = ConfigureServices();
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            var startForm = serviceProvider.GetRequiredService<IngredientsForm>();
+            Application.Run(startForm);
+        }
+
+        static ServiceCollection ConfigureServices()
+        {
+            ServiceCollection services = new ServiceCollection();
 
             if (ConfigurationManager.AppSettings["repositoryType"] == "txt")
-                ingredientsRepository = new IngredientsTxtRepository();
+                services.AddTransient<IIngredientsRepositories>(_ => new IngredientsTxtRepository());
             else
-                ingredientsRepository = new IngredientsSqlRepository();
+                services.AddTransient<IIngredientsRepositories>(_ => new IngredientsSqlRepository());
 
-            Application.Run(new IngredientsForm(ingredientsRepository));
+            services.AddTransient<IngredientsForm>();
+
+            return services;
+
         }
+
     }
 }
