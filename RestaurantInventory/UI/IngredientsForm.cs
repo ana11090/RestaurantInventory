@@ -109,6 +109,9 @@ namespace RestaurantInventory.UI
             weightNum.Value = default; //same as 0
             kcalNum.Value = 0;
             priceNum.Value = 0;
+            txtSearch.Text = string.Empty;
+
+            RefreshIngredientsGrid(); // so the grid will reflect the txtSearch text
         }
 
         private void RefreshIngredientsGrid()
@@ -136,12 +139,17 @@ namespace RestaurantInventory.UI
 
             ingredientsGrid.Columns.Clear();
             ingredientsGrid.Columns.AddRange(columns);
-        } 
+        }
+         
+        private void btnClearAllFields_Click(object sender, EventArgs e)
+        {
+            ClearAllFields();
+        }
 
-        private void btnSearch_Click(object sender, EventArgs e)
+        private void txtSearch_TextChanged(object sender, EventArgs e)
         {
             RefreshIngredientsGrid();
-        } 
+        }
     }
 
 

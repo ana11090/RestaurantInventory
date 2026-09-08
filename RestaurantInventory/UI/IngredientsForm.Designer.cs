@@ -41,7 +41,7 @@
             addInventoryBtn = new Button();
             ingredientsGrid = new DataGridView();
             txtSearch = new TextBox();
-            btnSearch = new Button();
+            btnClearAllFields = new Button();
             ((System.ComponentModel.ISupportInitialize)weightNum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)kcalNum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)priceNum).BeginInit();
@@ -155,25 +155,27 @@
             // 
             txtSearch.Location = new Point(420, 33);
             txtSearch.Name = "txtSearch";
-            txtSearch.Size = new Size(317, 30);
+            txtSearch.PlaceholderText = "Type here the ingredient name...";
+            txtSearch.Size = new Size(446, 30);
             txtSearch.TabIndex = 14;
+            txtSearch.TextChanged += txtSearch_TextChanged;
             // 
-            // btnSearch
+            // btnClearAllFields
             // 
-            btnSearch.Location = new Point(759, 34);
-            btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(107, 29);
-            btnSearch.TabIndex = 13;
-            btnSearch.Text = "Search";
-            btnSearch.UseVisualStyleBackColor = true;
-            btnSearch.Click += btnSearch_Click;
+            btnClearAllFields.Location = new Point(178, 312);
+            btnClearAllFields.Name = "btnClearAllFields";
+            btnClearAllFields.Size = new Size(210, 35);
+            btnClearAllFields.TabIndex = 16;
+            btnClearAllFields.Text = "Clear all fields";
+            btnClearAllFields.UseVisualStyleBackColor = true;
+            btnClearAllFields.Click += btnClearAllFields_Click;
             // 
             // IngredientsForm
             // 
             AutoScaleDimensions = new SizeF(11F, 22F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(893, 390);
-            Controls.Add(btnSearch);
+            Controls.Add(btnClearAllFields);
             Controls.Add(txtSearch);
             Controls.Add(ingredientsGrid);
             Controls.Add(addInventoryBtn);
@@ -216,6 +218,6 @@
         private System.Windows.Forms.Button addInventoryBtn;
         private DataGridView ingredientsGrid;
         private TextBox txtSearch;
-        private Button btnSearch;
+        private Button btnClearAllFields;
     }
 }
