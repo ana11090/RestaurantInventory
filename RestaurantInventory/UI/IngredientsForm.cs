@@ -104,7 +104,7 @@ namespace RestaurantInventory.UI
 
         private void ClearAllFields()
         {
-            ingredientTxt.Text =  default; //same as null
+            ingredientTxt.Text = default; //same as null
             typeIngredientTxt.Text = string.Empty;
             weightNum.Value = default; //same as 0
             kcalNum.Value = 0;
@@ -112,7 +112,7 @@ namespace RestaurantInventory.UI
         }
 
         private void RefreshIngredientsGrid()
-        { 
+        {
             List<Ingredient> ingredients = _ingredientsRepository.GetIngredients();
             ingredientsGrid.DataSource = ingredients;
         }
@@ -137,7 +137,17 @@ namespace RestaurantInventory.UI
             ingredientsGrid.Columns.Clear();
             ingredientsGrid.Columns.AddRange(columns);
         }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
-   
+
 }

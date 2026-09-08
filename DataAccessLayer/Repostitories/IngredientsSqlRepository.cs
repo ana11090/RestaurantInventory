@@ -46,5 +46,21 @@ namespace DataAccessLayer
 
         }
 
+
+        public List<Ingredient> SearchIngredients(string name)
+        {
+            string connectionString = ConnectionHelper.GetConnectionStringSettings;
+
+            string query = $"select * from Ingredients where ingredientName like '%{name}%'";
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
+            {
+
+                List<Ingredient> ingredients = connection.Query<Ingredient>(query).ToList();
+                return ingredients;
+            }
+
+        }
+
     }
 }

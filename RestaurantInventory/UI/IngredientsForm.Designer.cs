@@ -40,6 +40,8 @@
             priceNum = new NumericUpDown();
             addInventoryBtn = new Button();
             ingredientsGrid = new DataGridView();
+            txtSearch = new TextBox();
+            btnSearch = new Button();
             ((System.ComponentModel.ISupportInitialize)weightNum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)kcalNum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)priceNum).BeginInit();
@@ -144,17 +146,38 @@
             // 
             ingredientsGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ingredientsGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            ingredientsGrid.Location = new Point(425, 33);
+            ingredientsGrid.Location = new Point(420, 74);
             ingredientsGrid.Name = "ingredientsGrid";
             ingredientsGrid.RowHeadersWidth = 51;
-            ingredientsGrid.Size = new Size(446, 263);
+            ingredientsGrid.Size = new Size(446, 278);
             ingredientsGrid.TabIndex = 11;
+            // 
+            // txtSearch
+            // 
+            txtSearch.Location = new Point(420, 33);
+            txtSearch.Name = "txtSearch";
+            txtSearch.PlaceholderText = "Type ingredient name...";
+            txtSearch.Size = new Size(317, 30);
+            txtSearch.TabIndex = 12;
+            txtSearch.TextChanged += txtSearch_TextChanged;
+            // 
+            // btnSearch
+            // 
+            btnSearch.Location = new Point(759, 34);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(107, 29);
+            btnSearch.TabIndex = 13;
+            btnSearch.Text = "Search";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += btnSearch_Click;
             // 
             // IngredientsForm
             // 
             AutoScaleDimensions = new SizeF(11F, 22F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(893, 339);
+            ClientSize = new Size(893, 390);
+            Controls.Add(btnSearch);
+            Controls.Add(txtSearch);
             Controls.Add(ingredientsGrid);
             Controls.Add(addInventoryBtn);
             Controls.Add(priceNum);
@@ -195,5 +218,7 @@
         private System.Windows.Forms.NumericUpDown priceNum;
         private System.Windows.Forms.Button addInventoryBtn;
         private DataGridView ingredientsGrid;
+        private TextBox txtSearch;
+        private Button btnSearch;
     }
 }
