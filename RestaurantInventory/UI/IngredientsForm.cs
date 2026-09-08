@@ -113,7 +113,7 @@ namespace RestaurantInventory.UI
 
         private void RefreshIngredientsGrid()
         {
-            List<Ingredient> ingredients = _ingredientsRepository.GetIngredients();
+            List<Ingredient> ingredients = _ingredientsRepository.GetIngredients(txtSearch.Text);
             ingredientsGrid.DataSource = ingredients;
         }
         private void IngredientsForm_Load(object sender, EventArgs e)
@@ -128,25 +128,20 @@ namespace RestaurantInventory.UI
 
             DataGridViewColumn[] columns = new DataGridViewColumn[6];
             columns[0] = new DataGridViewTextBoxColumn() { DataPropertyName = "Id", Visible = false };
-            columns[1] = new DataGridViewTextBoxColumn() { DataPropertyName = "Name", HeaderText = "Name" };
-            columns[2] = new DataGridViewTextBoxColumn() { DataPropertyName = "Type", HeaderText = "Type" };
+            columns[1] = new DataGridViewTextBoxColumn() { DataPropertyName = "IngredientName", HeaderText = "Name" };
+            columns[2] = new DataGridViewTextBoxColumn() { DataPropertyName = "IngredientType", HeaderText = "Type" };
             columns[3] = new DataGridViewTextBoxColumn() { DataPropertyName = "Weight", HeaderText = "Weight" };
-            columns[4] = new DataGridViewTextBoxColumn() { DataPropertyName = "PricePer100g", HeaderText = "Price (100g)" };
+            columns[4] = new DataGridViewTextBoxColumn() { DataPropertyName = "Price", HeaderText = "Price (100g)" };
             columns[5] = new DataGridViewTextBoxColumn() { DataPropertyName = "KcalPer100g", HeaderText = "Kcal (100g)" };
 
             ingredientsGrid.Columns.Clear();
             ingredientsGrid.Columns.AddRange(columns);
-        }
-
-        private void txtSearch_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+        } 
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-
-        }
+            RefreshIngredientsGrid();
+        } 
     }
 
 

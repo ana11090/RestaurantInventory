@@ -144,22 +144,19 @@
             // 
             // ingredientsGrid
             // 
-            ingredientsGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            ingredientsGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            ingredientsGrid.Location = new Point(420, 74);
+            ingredientsGrid.ColumnHeadersHeight = 29;
+            ingredientsGrid.Location = new Point(420, 82);
             ingredientsGrid.Name = "ingredientsGrid";
             ingredientsGrid.RowHeadersWidth = 51;
-            ingredientsGrid.Size = new Size(446, 278);
-            ingredientsGrid.TabIndex = 11;
+            ingredientsGrid.Size = new Size(446, 277);
+            ingredientsGrid.TabIndex = 15;
             // 
             // txtSearch
             // 
             txtSearch.Location = new Point(420, 33);
             txtSearch.Name = "txtSearch";
-            txtSearch.PlaceholderText = "Type ingredient name...";
             txtSearch.Size = new Size(317, 30);
-            txtSearch.TabIndex = 12;
-            txtSearch.TextChanged += txtSearch_TextChanged;
+            txtSearch.TabIndex = 14;
             // 
             // btnSearch
             // 

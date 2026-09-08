@@ -31,36 +31,37 @@ namespace DataAccessLayer
 
         }
 
-        public List<Ingredient> GetIngredients()
+        /// <summary>
+        /// Returns ingredients from the database.
+        /// If name contains text, returns only ingredients whose name contains it.
+        /// If name is empty or null, returns all ingredients.
+        /// </summary>
+        /// <param name="name">
+        /// The text to search for in the ingredient name.
+        /// Empty or null = no filter, returns the full list.
+        /// </param>
+        /// <returns>The list of ingredients.</returns>
+        public List<Ingredient> GetIngredients(string? name="")
         {
             string connectionString = ConnectionHelper.GetConnectionStringSettings;
-
             string query = @"select * from Ingredients";
+            if (!string.IsNullOrEmpty(name))
+            {
+                //query = query + $" where ingredientName like '%{name}%'";
+                // Parametru Dapper (@name), nu concatenare — protejează împotriva SQL injection.
+                query = query + " where ingredientName like @name";
+
+            }
 
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
             {
-
-                List<Ingredient> ingredients = connection.Query<Ingredient>(query).ToList();
+                // Pass the value for @name as a Dapper parameter (safe against SQL injection).
+                // The % wildcards go in the value, so LIKE matches the name anywhere in the string.
+                List<Ingredient> ingredients = connection.Query<Ingredient>(query, new { name = $"%{name}%" }).ToList();
                 return ingredients;
             }
 
         }
-
-
-        public List<Ingredient> SearchIngredients(string name)
-        {
-            string connectionString = ConnectionHelper.GetConnectionStringSettings;
-
-            string query = $"select * from Ingredients where ingredientName like '%{name}%'";
-
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
-            {
-
-                List<Ingredient> ingredients = connection.Query<Ingredient>(query).ToList();
-                return ingredients;
-            }
-
-        }
-
+         
     }
 }

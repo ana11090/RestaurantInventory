@@ -10,7 +10,7 @@ namespace DataAccessLayer.Contracts
     {
         public void AddIngredient(Ingredient ingredient);
 
-        public List<Ingredient> GetIngredients();
+        public List<Ingredient> GetIngredients(string? name);
 
     }
 }

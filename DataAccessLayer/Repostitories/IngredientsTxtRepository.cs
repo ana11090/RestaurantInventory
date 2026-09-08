@@ -21,7 +21,7 @@ namespace DataAccessLayer.Repostitories
             }
         }
 
-        public List<Ingredient> GetIngredients()
+        public List<Ingredient> GetIngredients(string? name)
         {
             List<Ingredient> ingredients = new List<Ingredient>();
 
@@ -40,7 +40,11 @@ namespace DataAccessLayer.Repostitories
                     ingredient.Price = decimal.Parse(values[4]);
                     ingredient.IngredientType = values[5];
 
-                    ingredients.Add(ingredient);
+                    if (string.IsNullOrEmpty(name))
+                        ingredients.Add(ingredient);
+                    else if(!string.IsNullOrEmpty(name) && ingredient.IngredientName.ToLower().
+                        StartsWith(name.ToLower()))
+                        ingredients.Add(ingredient);
                 }
             }
             return ingredients;
