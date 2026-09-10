@@ -87,7 +87,7 @@ namespace RestaurantInventory.UI
         //    MessageBox.Show(message);
         //}
 
-        private void addInventoryBtn_Click(object sender, EventArgs e)
+        private async void addInventoryBtn_Click(object sender, EventArgs e)
         {
             Ingredient ingredient = new Ingredient(ingredientTxt.Text, typeIngredientTxt.Text,
                  weightNum.Value, kcalNum.Value, priceNum.Value);
@@ -97,7 +97,9 @@ namespace RestaurantInventory.UI
             //ingredient.KcalPer100g = kcalNum.Value;
             //ingredient.Price = priceNum.Value;
 
-            _ingredientsRepository.AddIngredient(ingredient);
+            addInventoryBtn.Enabled = false; //disable button until the ingredient was added
+            await _ingredientsRepository.AddIngredient(ingredient);
+            addInventoryBtn.Enabled = true;
             ClearAllFields();
             RefreshIngredientsGrid();
         }
@@ -114,9 +116,9 @@ namespace RestaurantInventory.UI
             RefreshIngredientsGrid(); // so the grid will reflect the txtSearch text
         }
 
-        private void RefreshIngredientsGrid()
+        private async Task RefreshIngredientsGrid()
         {
-            List<Ingredient> ingredients = _ingredientsRepository.GetIngredients(txtSearch.Text);
+            List<Ingredient> ingredients = await _ingredientsRepository.GetIngredients(txtSearch.Text);
             ingredientsGrid.DataSource = ingredients;
         }
         private void IngredientsForm_Load(object sender, EventArgs e)
@@ -146,9 +148,14 @@ namespace RestaurantInventory.UI
             ClearAllFields();
         }
 
-        private void txtSearch_TextChanged(object sender, EventArgs e)
+        private async void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            RefreshIngredientsGrid();
+            int lenghtBeforePause = txtSearch.TextLength;
+            await Task.Delay(500);
+            int lenghtAfterPause = txtSearch.TextLength;
+
+            if(lenghtAfterPause == lenghtAfterPause)
+                RefreshIngredientsGrid();
         }
     }
 

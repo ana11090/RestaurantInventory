@@ -13,7 +13,7 @@ namespace DataAccessLayer
 {
     public class IngredientsSqlRepository : IIngredientsRepositories
     {
-        public void AddIngredient(Ingredient ingredient )
+        public async Task AddIngredient(Ingredient ingredient )
         {
             string connectionString = ConnectionHelper.GetConnectionStringSettings;
 
@@ -24,7 +24,7 @@ namespace DataAccessLayer
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
             {
 
-                connection.Execute(query, ingredient);
+                await connection.ExecuteAsync(query, ingredient);
             //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
             //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
             }
@@ -41,7 +41,7 @@ namespace DataAccessLayer
         /// Empty or null = no filter, returns the full list.
         /// </param>
         /// <returns>The list of ingredients.</returns>
-        public List<Ingredient> GetIngredients(string? name="")
+        public async Task<List<Ingredient>> GetIngredients(string? name="")
         {
             string connectionString = ConnectionHelper.GetConnectionStringSettings;
             string query = @"select * from Ingredients";
@@ -57,8 +57,13 @@ namespace DataAccessLayer
             {
                 // Pass the value for @name as a Dapper parameter (safe against SQL injection).
                 // The % wildcards go in the value, so LIKE matches the name anywhere in the string.
-                List<Ingredient> ingredients = connection.Query<Ingredient>(query, new { name = $"%{name}%" }).ToList();
-                return ingredients;
+
+                //for sync methods
+                // List<Ingredient> ingredients = connection.Query<Ingredient>(query, new { name = $"%{name}%" }).ToList();
+
+                //for async methods
+               var ingredients = await connection.QueryAsync<Ingredient>(query, new { name = $"%{name}%" });
+                return  ingredients.ToList();
             }
 
         }

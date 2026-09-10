@@ -9,19 +9,17 @@ namespace DataAccessLayer.Repostitories
     public class IngredientsTxtRepository : IIngredientsRepositories
     {
         string _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "IngredientsStorage.txt");
-        public void AddIngredient(Ingredient ingredient)
+        public async Task AddIngredient(Ingredient ingredient)
         {
             int id = Math.Abs(Guid.NewGuid().GetHashCode());
 
             using (StreamWriter sw = File.AppendText(_filePath))
             {
-                sw.WriteLine(@$"{id}|{ingredient.IngredientName}
-                |{ingredient.Weight}|{ingredient.KcalPer100g}|
-                {ingredient.Price}|{ingredient.IngredientType}");
+                await sw.WriteLineAsync($"{id}|{ingredient.IngredientName}|{ingredient.Weight}|{ingredient.KcalPer100g}|{ingredient.Price}|{ingredient.IngredientType}");
             }
         }
 
-        public List<Ingredient> GetIngredients(string? name)
+        public async Task<List<Ingredient>> GetIngredients(string? name)
         {
             List<Ingredient> ingredients = new List<Ingredient>();
 
@@ -29,7 +27,8 @@ namespace DataAccessLayer.Repostitories
             {
                 while (!sr.EndOfStream)
                 {
-                    string line = sr.ReadLine();
+                    //string line = await sr.ReadLine(); for sync methods
+                    string line = await sr.ReadLineAsync(); //for async methods
                     string[] values = line.Split('|');
 
                     Ingredient ingredient = new Ingredient();
@@ -47,7 +46,7 @@ namespace DataAccessLayer.Repostitories
                         ingredients.Add(ingredient);
                 }
             }
-            return ingredients;
+            return  ingredients;
         }
     }
 }

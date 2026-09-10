@@ -8,9 +8,9 @@ namespace DataAccessLayer.Contracts
 {
     public interface IIngredientsRepositories
     {
-        public void AddIngredient(Ingredient ingredient);
+        public Task AddIngredient(Ingredient ingredient);
 
-        public List<Ingredient> GetIngredients(string? name);
+        public Task<List<Ingredient>> GetIngredients(string? name);
 
     }
 }
