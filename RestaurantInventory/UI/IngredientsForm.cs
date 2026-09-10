@@ -89,6 +89,9 @@ namespace RestaurantInventory.UI
 
         private async void addInventoryBtn_Click(object sender, EventArgs e)
         {
+            if (!IsValid())
+                return;
+
             Ingredient ingredient = new Ingredient(ingredientTxt.Text, typeIngredientTxt.Text,
                  weightNum.Value, kcalNum.Value, priceNum.Value);
             //ingredient.IngredientName = ingredientTxt.Text;
@@ -156,6 +159,43 @@ namespace RestaurantInventory.UI
 
             if(lenghtAfterPause == lenghtAfterPause)
                 RefreshIngredientsGrid();
+        }
+
+        private bool IsValid()
+        {
+            bool isValid = true;
+            string message = "";
+
+            if (string.IsNullOrEmpty(ingredientTxt.Text))
+            {
+                isValid = false;
+                message += "Please enter name.\n\n";
+            }
+            if (string.IsNullOrEmpty(typeIngredientTxt.Text))
+            {
+                isValid = false;
+                message += "Please enter type.\n\n";
+            }
+            if (weightNum.Value <= 0)
+            {
+                isValid = false;
+                message += "Weight must be greater than 0.\n\n";
+            }
+            if (kcalNum.Value < 0)
+            {
+                isValid = false;
+                message += "Kcal must be greater than or equal to 0.\n\n";
+            }
+            if (priceNum.Value <= 0)
+            {
+                isValid = false;
+                message += "Price must be greater than 0.\n\n";
+            }
+
+            if (!isValid)
+                MessageBox.Show(message, "Form not valid!");
+
+            return isValid;
         }
     }
 
