@@ -171,6 +171,19 @@ namespace RestaurantInventory.UI
                 isValid = false;
                 message += "Please enter name.\n\n";
             }
+            else
+            {
+                List<Ingredient> ingredients = (List<Ingredient>)ingredientsGrid.DataSource;
+
+                foreach (Ingredient i in ingredients)
+                {
+                    if (i.IngredientName == ingredientTxt.Text)
+                    {
+                        MessageBox.Show("The ingredient already exist", "Form not valid!");
+                        return false;
+                    }
+                }
+            }
             if (string.IsNullOrEmpty(typeIngredientTxt.Text))
             {
                 isValid = false;
