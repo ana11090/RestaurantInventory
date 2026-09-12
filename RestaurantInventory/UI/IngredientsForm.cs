@@ -15,7 +15,11 @@ namespace RestaurantInventory.UI
 {
     public partial class IngredientsForm : Form
     {
-        readonly IIngredientsRepositories _ingredientsRepository; //db access
+        // The form talks to the repository only through this interface.
+        // It never knows whether the object inside is IngredientsSqlRepository or IngredientsTxtRepository —
+        // Program.cs picks one based on App.config ("repositoryType") and passes it into the constructor.
+        // Every method the form calls here must be declared in IIngredientsRepositories.
+        readonly IIngredientsRepositories _ingredientsRepository;
         public IngredientsForm(IIngredientsRepositories ingredientsRepository)
         {
             InitializeComponent();
@@ -132,20 +136,28 @@ namespace RestaurantInventory.UI
 
         private void CustomizeGridAppearence()
         {
+            ingredientsGrid.AutoGenerateColumns = false;
             ingredientsGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            DataGridViewColumn[] columns = new DataGridViewColumn[6];
+            DataGridViewColumn[] columns = new DataGridViewColumn[7];
             columns[0] = new DataGridViewTextBoxColumn() { DataPropertyName = "Id", Visible = false };
             columns[1] = new DataGridViewTextBoxColumn() { DataPropertyName = "IngredientName", HeaderText = "Name" };
             columns[2] = new DataGridViewTextBoxColumn() { DataPropertyName = "IngredientType", HeaderText = "Type" };
             columns[3] = new DataGridViewTextBoxColumn() { DataPropertyName = "Weight", HeaderText = "Weight" };
             columns[4] = new DataGridViewTextBoxColumn() { DataPropertyName = "Price", HeaderText = "Price (100g)" };
             columns[5] = new DataGridViewTextBoxColumn() { DataPropertyName = "KcalPer100g", HeaderText = "Kcal (100g)" };
+            columns[6] = new DataGridViewButtonColumn()
+            {
+                Text = "Delete",
+                Name = "btnDelete",
+                HeaderText = "",
+                UseColumnTextForButtonValue = true
+            };
 
             ingredientsGrid.Columns.Clear();
             ingredientsGrid.Columns.AddRange(columns);
         }
-         
+
         private void btnClearAllFields_Click(object sender, EventArgs e)
         {
             ClearAllFields();
@@ -157,7 +169,7 @@ namespace RestaurantInventory.UI
             await Task.Delay(500);
             int lenghtAfterPause = txtSearch.TextLength;
 
-            if(lenghtAfterPause == lenghtAfterPause)
+            if (lenghtAfterPause == lenghtAfterPause)
                 RefreshIngredientsGrid();
         }
 
@@ -209,6 +221,16 @@ namespace RestaurantInventory.UI
                 MessageBox.Show(message, "Form not valid!");
 
             return isValid;
+        }
+
+        private async void ingredientsGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if( ingredientsGrid.CurrentCell is DataGridViewButtonCell)
+            {
+                Ingredient clickedIngredient = (Ingredient) ingredientsGrid.Rows[e.RowIndex].DataBoundItem;
+                await _ingredientsRepository.DeleteIngredient(clickedIngredient);
+                RefreshIngredientsGrid();
+            }
         }
     }
 

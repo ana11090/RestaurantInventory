@@ -11,6 +11,7 @@ namespace DataAccessLayer.Contracts
         public Task AddIngredient(Ingredient ingredient);
 
         public Task<List<Ingredient>> GetIngredients(string? name);
+        public Task DeleteIngredient(Ingredient ingredient);
 
     }
 }

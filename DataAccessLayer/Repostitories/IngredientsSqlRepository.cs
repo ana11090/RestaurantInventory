@@ -67,6 +67,22 @@ namespace DataAccessLayer
             }
 
         }
-         
+
+
+        public async Task DeleteIngredient(Ingredient ingredient)
+        {
+            string connectionString = ConnectionHelper.GetConnectionStringSettings;
+
+            //string query = $"detele from Ingredients where id={ingredient.Id}";
+            string query = $"delete from Ingredients where id=@Id";
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
+            {
+
+                await connection.ExecuteAsync(query, ingredient);
+                //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
+                //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
+            }
+
+        }
     }
 }

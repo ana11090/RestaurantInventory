@@ -150,6 +150,7 @@
             ingredientsGrid.RowHeadersWidth = 51;
             ingredientsGrid.Size = new Size(446, 277);
             ingredientsGrid.TabIndex = 15;
+            ingredientsGrid.CellClick += ingredientsGrid_CellClick;
             // 
             // txtSearch
             // 

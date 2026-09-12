@@ -1,8 +1,9 @@
-﻿using DomainModel.Model;
+﻿using DataAccessLayer.Contracts;
+using DomainModel.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
-using DataAccessLayer.Contracts;
 
 namespace DataAccessLayer.Repostitories
 {
@@ -47,6 +48,19 @@ namespace DataAccessLayer.Repostitories
                 }
             }
             return  ingredients;
+        }
+
+
+        public async Task DeleteIngredient(Ingredient ingredient)
+        {
+            string[] lines = await File.ReadAllLinesAsync(_filePath);
+
+            // keep every line whose id is NOT the one deleted
+            List<string> remaining = lines
+                .Where(line => line.Split('|')[0] != ingredient.Id.ToString())
+                .ToList();
+
+            await File.WriteAllLinesAsync(_filePath, remaining);
         }
     }
 }
