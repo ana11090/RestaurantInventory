@@ -119,8 +119,7 @@ namespace RestaurantInventory.UI
             typeIngredientTxt.Text = string.Empty;
             weightNum.Value = default; //same as 0
             kcalNum.Value = 0;
-            priceNum.Value = 0;
-            txtSearch.Text = string.Empty;
+            priceNum.Value = 0; 
 
             RefreshIngredientsGrid(); // so the grid will reflect the txtSearch text
         }
@@ -243,6 +242,7 @@ namespace RestaurantInventory.UI
                 if (ingredientsGrid.CurrentCell.OwningColumn.Name == "btnDelete")
                 {
                     await _ingredientsRepository.DeleteIngredient(clickedIngredient);
+                    ClearAllFields();
                 }
                 else if (ingredientsGrid.CurrentCell.OwningColumn.Name == "btnEdit")
                 {
