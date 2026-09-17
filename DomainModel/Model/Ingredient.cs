@@ -15,15 +15,21 @@ namespace DomainModel.Model
 
         public Ingredient() { }
 
-        public Ingredient(string name, string type, decimal weight, decimal kcal, decimal price)
+        public Ingredient(string name, string type, decimal weight, 
+            decimal kcal, decimal price, int? id=null)
         {
             this.IngredientName = name;
             this.IngredientType = type;
             this.Weight = weight;
             this.KcalPer100g = kcal;
             this.Price = price;
+
+            if(id != null)
+            {
+                this.Id = (int)id;
+            }
         }
 
-     
+        
     }
 }

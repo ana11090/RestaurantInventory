@@ -42,6 +42,7 @@
             ingredientsGrid = new DataGridView();
             txtSearch = new TextBox();
             btnClearAllFields = new Button();
+            btnEditIngredient = new Button();
             ((System.ComponentModel.ISupportInitialize)weightNum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)kcalNum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)priceNum).BeginInit();
@@ -148,16 +149,17 @@
             ingredientsGrid.Location = new Point(420, 82);
             ingredientsGrid.Name = "ingredientsGrid";
             ingredientsGrid.RowHeadersWidth = 51;
-            ingredientsGrid.Size = new Size(446, 277);
+            ingredientsGrid.Size = new Size(627, 277);
             ingredientsGrid.TabIndex = 15;
             ingredientsGrid.CellClick += ingredientsGrid_CellClick;
+            ingredientsGrid.CellContentClick += ingredientsGrid_CellContentClick;
             // 
             // txtSearch
             // 
             txtSearch.Location = new Point(420, 33);
             txtSearch.Name = "txtSearch";
             txtSearch.PlaceholderText = "Type here the ingredient name...";
-            txtSearch.Size = new Size(446, 30);
+            txtSearch.Size = new Size(627, 30);
             txtSearch.TabIndex = 14;
             txtSearch.TextChanged += txtSearch_TextChanged;
             // 
@@ -171,11 +173,23 @@
             btnClearAllFields.UseVisualStyleBackColor = true;
             btnClearAllFields.Click += btnClearAllFields_Click;
             // 
+            // btnEditIngredient
+            // 
+            btnEditIngredient.Location = new Point(178, 261);
+            btnEditIngredient.Name = "btnEditIngredient";
+            btnEditIngredient.Size = new Size(210, 35);
+            btnEditIngredient.TabIndex = 17;
+            btnEditIngredient.Text = "Edit ingredient";
+            btnEditIngredient.UseVisualStyleBackColor = true;
+            btnEditIngredient.Visible = false;
+            btnEditIngredient.Click += btnEditIngredient_Click;
+            // 
             // IngredientsForm
             // 
             AutoScaleDimensions = new SizeF(11F, 22F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(893, 390);
+            ClientSize = new Size(1059, 390);
+            Controls.Add(btnEditIngredient);
             Controls.Add(btnClearAllFields);
             Controls.Add(txtSearch);
             Controls.Add(ingredientsGrid);
@@ -220,5 +234,6 @@
         private DataGridView ingredientsGrid;
         private TextBox txtSearch;
         private Button btnClearAllFields;
+        private Button btnEditIngredient;
     }
 }

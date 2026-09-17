@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer; 
+using DataAccessLayer.Contracts;
 using DomainModel.Model;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DataAccessLayer.Contracts;
+using System.Xml.Linq;
 
 namespace RestaurantInventory.UI
 {
@@ -20,6 +21,7 @@ namespace RestaurantInventory.UI
         // Program.cs picks one based on App.config ("repositoryType") and passes it into the constructor.
         // Every method the form calls here must be declared in IIngredientsRepositories.
         readonly IIngredientsRepositories _ingredientsRepository;
+        private int _ingredientId;
         public IngredientsForm(IIngredientsRepositories ingredientsRepository)
         {
             InitializeComponent();
@@ -132,6 +134,9 @@ namespace RestaurantInventory.UI
         {
             RefreshIngredientsGrid();
             CustomizeGridAppearence();
+
+            addInventoryBtn.Visible = true;
+            btnEditIngredient.Visible = false;
         }
 
         private void CustomizeGridAppearence()
@@ -139,7 +144,7 @@ namespace RestaurantInventory.UI
             ingredientsGrid.AutoGenerateColumns = false;
             ingredientsGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            DataGridViewColumn[] columns = new DataGridViewColumn[7];
+            DataGridViewColumn[] columns = new DataGridViewColumn[8];
             columns[0] = new DataGridViewTextBoxColumn() { DataPropertyName = "Id", Visible = false };
             columns[1] = new DataGridViewTextBoxColumn() { DataPropertyName = "IngredientName", HeaderText = "Name" };
             columns[2] = new DataGridViewTextBoxColumn() { DataPropertyName = "IngredientType", HeaderText = "Type" };
@@ -150,6 +155,13 @@ namespace RestaurantInventory.UI
             {
                 Text = "Delete",
                 Name = "btnDelete",
+                HeaderText = "",
+                UseColumnTextForButtonValue = true
+            };
+            columns[7] = new DataGridViewButtonColumn()
+            {
+                Text = "Edit",
+                Name = "btnEdit",
                 HeaderText = "",
                 UseColumnTextForButtonValue = true
             };
@@ -189,7 +201,7 @@ namespace RestaurantInventory.UI
 
                 foreach (Ingredient i in ingredients)
                 {
-                    if (i.IngredientName == ingredientTxt.Text)
+                    if (i.IngredientName == ingredientTxt.Text && i.Id != _ingredientId)
                     {
                         MessageBox.Show("The ingredient already exist", "Form not valid!");
                         return false;
@@ -225,12 +237,53 @@ namespace RestaurantInventory.UI
 
         private async void ingredientsGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if( ingredientsGrid.CurrentCell is DataGridViewButtonCell)
+            if (ingredientsGrid.CurrentCell is DataGridViewButtonCell)
             {
-                Ingredient clickedIngredient = (Ingredient) ingredientsGrid.Rows[e.RowIndex].DataBoundItem;
-                await _ingredientsRepository.DeleteIngredient(clickedIngredient);
+                Ingredient clickedIngredient = (Ingredient)ingredientsGrid.Rows[e.RowIndex].DataBoundItem;
+                if (ingredientsGrid.CurrentCell.OwningColumn.Name == "btnDelete")
+                {
+                    await _ingredientsRepository.DeleteIngredient(clickedIngredient);
+                }
+                else if (ingredientsGrid.CurrentCell.OwningColumn.Name == "btnEdit")
+                {
+                    FillFormForEdit(clickedIngredient);
+                    
+                    addInventoryBtn.Visible = false;
+                    btnEditIngredient.Visible = true;
+                }
+
                 RefreshIngredientsGrid();
             }
+        }
+
+        private void FillFormForEdit(Ingredient? clickedIngredient)
+        {
+            _ingredientId = clickedIngredient.Id;
+            ingredientTxt.Text = clickedIngredient.IngredientName;
+            typeIngredientTxt.Text = clickedIngredient.IngredientType;
+            weightNum.Value = clickedIngredient.Weight;
+            kcalNum.Value = clickedIngredient.KcalPer100g;
+            priceNum.Value = clickedIngredient.Price;
+
+        }
+
+        private void ingredientsGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private async void btnEditIngredient_Click(object sender, EventArgs e)
+        {
+            if (!IsValid()) return;
+
+            Ingredient ingredient = new Ingredient( ingredientTxt.Text, typeIngredientTxt.Text, 
+                weightNum.Value, kcalNum.Value, priceNum.Value, _ingredientId);
+          
+
+            await _ingredientsRepository.EditIngredient(ingredient);
+
+            ClearAllFields();
+            RefreshIngredientsGrid();
         }
     }
 

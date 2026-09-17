@@ -62,5 +62,19 @@ namespace DataAccessLayer.Repostitories
 
             await File.WriteAllLinesAsync(_filePath, remaining);
         }
+
+        public async Task EditIngredient(Ingredient ingredient)
+        {
+            string[] lines = await File.ReadAllLinesAsync(_filePath);
+
+            // replace the line whose id matches, keep the rest unchanged
+            List<string> updated = lines
+                .Select(line => line.Split('|')[0] == ingredient.Id.ToString()
+                    ? $"{ingredient.Id}|{ingredient.IngredientName}|{ingredient.Weight}|{ingredient.KcalPer100g}|{ingredient.Price}|{ingredient.IngredientType}"
+                    : line)
+                .ToList();
+
+            await File.WriteAllLinesAsync(_filePath, updated);
+        }
     }
 }

@@ -84,5 +84,29 @@ namespace DataAccessLayer
             }
 
         }
+
+        public async Task EditIngredient(Ingredient ingredient)
+        {
+            string connectionString = ConnectionHelper.GetConnectionStringSettings;
+
+            //string query = $"detele from Ingredients where id={ingredient.Id}";
+
+            string query = @"update Ingredients
+                 set ingredientName = @IngredientName,
+                     ingredientType = @IngredientType,
+                     weight         = @Weight,
+                     kcalPer100g    = @KcalPer100g,
+                     price          = @Price
+                 where id = @Id";
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
+            {
+
+                await connection.ExecuteAsync(query, ingredient);
+                //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
+                //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
+            }
+
+        }
     }
 }
