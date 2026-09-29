@@ -26,6 +26,12 @@ namespace RestaurantInventory.UI
         {
             InitializeComponent();
             _ingredientsRepository = ingredientsRepository;
+            _ingredientsRepository.OnError += OnErrorOccured;
+        }
+
+        private void OnErrorOccured(string errorMessage)
+        {
+            MessageBox.Show(errorMessage);
         }
 
         //private void addInventoryBtn_Click(object sender, EventArgs e)
@@ -194,19 +200,22 @@ namespace RestaurantInventory.UI
                 isValid = false;
                 message += "Please enter name.\n\n";
             }
-            else
-            {
-                List<Ingredient> ingredients = (List<Ingredient>)ingredientsGrid.DataSource;
 
-                foreach (Ingredient i in ingredients)
-                {
-                    if (i.IngredientName == ingredientTxt.Text && i.Id != _ingredientId)
-                    {
-                        MessageBox.Show("The ingredient already exist", "Form not valid!");
-                        return false;
-                    }
-                }
-            }
+            //added try catch blocks instead
+
+            //else
+            //{
+            //    List<Ingredient> ingredients = (List<Ingredient>)ingredientsGrid.DataSource;
+
+            //    foreach (Ingredient i in ingredients)
+            //    {
+            //        if (i.IngredientName == ingredientTxt.Text && i.Id != _ingredientId)
+            //        {
+            //            MessageBox.Show("The ingredient already exist", "Form not valid!");
+            //            return false;
+            //        }
+            //    }
+            //}
             if (string.IsNullOrEmpty(typeIngredientTxt.Text))
             {
                 isValid = false;

@@ -13,24 +13,51 @@ namespace DataAccessLayer
 {
     public class IngredientsSqlRepository : IIngredientsRepositories
     {
+        public event Action<string> OnError;
+
         public async Task AddIngredient(Ingredient ingredient )
         {
-            string connectionString = ConnectionHelper.GetConnectionStringSettings;
 
-            string query = @"insert into Ingredients( ingredientName, 
+            try
+            {
+                string connectionString = ConnectionHelper.GetConnectionStringSettings;
+
+                string query = @"insert into Ingredients( ingredientName, 
                         ingredientType, weight, kcalPer100g, price) 
                         values ( @ingredientName, @ingredientType, @weight, @kcalPer100g, @price)";
 
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
-            {
+                using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
+                {
 
-                await connection.ExecuteAsync(query, ingredient);
-            //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
-            //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
+                    await connection.ExecuteAsync(query, ingredient);
+                    //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
+                    //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
+                }
             }
+            catch (SqlException ex)
+            {
+                string errorSqlMessage = "";
+                if(ex.Number == 2627)
+                
+                    errorSqlMessage = "Thist ingredient alreay exist!";
+                else
+                    errorSqlMessage = "An error happen in the database!";
+                //OnError?.Invoke(errorSqlMessage);
+                ErrorOccured(errorSqlMessage);
+            }
+            catch (Exception ex) {
+                string errorMessage = "An error ocured while adding the ingredient. The ingredient wasn't added!";
+                Logger.LogError(errorMessage, ex);
+                 ErrorOccured(errorMessage);
 
+            } 
         }
 
+        private void ErrorOccured(string errorMessage)
+        {
+            if (OnError != null)
+                OnError.Invoke(errorMessage);
+        }
         /// <summary>
         /// Returns ingredients from the database.
         /// If name contains text, returns only ingredients whose name contains it.

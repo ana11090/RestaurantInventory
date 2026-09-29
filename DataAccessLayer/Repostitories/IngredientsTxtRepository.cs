@@ -9,16 +9,43 @@ namespace DataAccessLayer.Repostitories
 {
     public class IngredientsTxtRepository : IIngredientsRepositories
     {
+
+        public event Action<string> OnError;
         string _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "IngredientsStorage.txt");
+
         public async Task AddIngredient(Ingredient ingredient)
         {
-            int id = Math.Abs(Guid.NewGuid().GetHashCode());
-
-            using (StreamWriter sw = File.AppendText(_filePath))
+            try
             {
-                await sw.WriteLineAsync($"{id}|{ingredient.IngredientName}|{ingredient.Weight}|{ingredient.KcalPer100g}|{ingredient.Price}|{ingredient.IngredientType}");
+                int id = Math.Abs(Guid.NewGuid().GetHashCode());
+
+                using (StreamWriter sw = File.AppendText(_filePath))
+                {
+                    await sw.WriteLineAsync($"{id}|{ingredient.IngredientName}|{ingredient.Weight}|{ingredient.KcalPer100g}|{ingredient.Price}|{ingredient.IngredientType}");
+                }
+            }
+            catch (IOException ex)
+            {
+                string errorMessage = "The ingredients file is in use or unavailable!";
+                await Logger.LogError(errorMessage, ex);
+                ErrorOccured(errorMessage);
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = "An error occured while adding the ingredient. The ingredient wasn't added!";
+                await Logger.LogError(errorMessage, ex);
+                ErrorOccured(errorMessage);
             }
         }
+
+
+
+        private void ErrorOccured(string errorMessage)
+        {
+            if (OnError != null)
+                OnError.Invoke(errorMessage);
+        }
+
 
         public async Task<List<Ingredient>> GetIngredients(string? name)
         {
