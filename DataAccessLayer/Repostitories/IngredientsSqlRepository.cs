@@ -70,69 +70,100 @@ namespace DataAccessLayer
         /// <returns>The list of ingredients.</returns>
         public async Task<List<Ingredient>> GetIngredients(string? name="")
         {
-            string connectionString = ConnectionHelper.GetConnectionStringSettings;
-            string query = @"select * from Ingredients";
-            if (!string.IsNullOrEmpty(name))
+            try
             {
-                //query = query + $" where ingredientName like '%{name}%'";
-                // Parametru Dapper (@name), nu concatenare — protejează împotriva SQL injection.
-                query = query + " where ingredientName like @name";
+                 string connectionString = ConnectionHelper.GetConnectionStringSettings;
+                string query = @"select * from Ingredients";
+                if (!string.IsNullOrEmpty(name))
+                {
+                    //query = query + $" where ingredientName like '%{name}%'";
+                    // Parametru Dapper (@name), nu concatenare — protejează împotriva SQL injection.
+                    query = query + " where ingredientName like @name";
 
+                }
+
+                using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
+                {
+                    // Pass the value for @name as a Dapper parameter (safe against SQL injection).
+                    // The % wildcards go in the value, so LIKE matches the name anywhere in the string.
+
+                    //for sync methods
+                    // List<Ingredient> ingredients = connection.Query<Ingredient>(query, new { name = $"%{name}%" }).ToList();
+
+                    //for async methods
+                   var ingredients = await connection.QueryAsync<Ingredient>(query, new { name = $"%{name}%" });
+                    return  ingredients.ToList();
+                }
             }
-
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
+            catch (Exception ex)
             {
-                // Pass the value for @name as a Dapper parameter (safe against SQL injection).
-                // The % wildcards go in the value, so LIKE matches the name anywhere in the string.
+                string errorMessage = "An error ocured while getting the ingredient!";
+                Logger.LogError(errorMessage, ex);
+                ErrorOccured(errorMessage);
 
-                //for sync methods
-                // List<Ingredient> ingredients = connection.Query<Ingredient>(query, new { name = $"%{name}%" }).ToList();
-
-                //for async methods
-               var ingredients = await connection.QueryAsync<Ingredient>(query, new { name = $"%{name}%" });
-                return  ingredients.ToList();
-            }
-
+                return new List<Ingredient>(); 
+            } 
         }
 
 
         public async Task DeleteIngredient(Ingredient ingredient)
         {
-            string connectionString = ConnectionHelper.GetConnectionStringSettings;
-
-            //string query = $"detele from Ingredients where id={ingredient.Id}";
-            string query = $"delete from Ingredients where id=@Id";
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
+            try
             {
+                 string connectionString = ConnectionHelper.GetConnectionStringSettings;
 
-                await connection.ExecuteAsync(query, ingredient);
-                //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
-                //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
+                //string query = $"detele from Ingredients where id={ingredient.Id}";
+                string query = $"delete from Ingredients where id=@Id";
+                using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
+                {
+
+                    await connection.ExecuteAsync(query, ingredient);
+                    //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
+                    //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
+                }
             }
+            catch (Exception ex)
+            {
+                string errorMessage = "An error ocured while deleting the ingredient!";
+                Logger.LogError(errorMessage, ex);
+                ErrorOccured(errorMessage); 
+            }
+
 
         }
 
         public async Task EditIngredient(Ingredient ingredient)
         {
-            string connectionString = ConnectionHelper.GetConnectionStringSettings;
-
-            //string query = $"detele from Ingredients where id={ingredient.Id}";
-
-            string query = @"update Ingredients
-                 set ingredientName = @IngredientName,
-                     ingredientType = @IngredientType,
-                     weight         = @Weight,
-                     kcalPer100g    = @KcalPer100g,
-                     price          = @Price
-                 where id = @Id";
-
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
+            try
             {
+                string connectionString = ConnectionHelper.GetConnectionStringSettings;
 
-                await connection.ExecuteAsync(query, ingredient);
-                //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
-                //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
+                //string query = $"detele from Ingredients where id={ingredient.Id}";
+
+                string query = @"update Ingredients
+                     set ingredientName = @IngredientName,
+                         ingredientType = @IngredientType,
+                         weight         = @Weight,
+                         kcalPer100g    = @KcalPer100g,
+                         price          = @Price
+                     where id = @Id";
+
+                using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connectionString))
+                {
+
+                    await connection.ExecuteAsync(query, ingredient);
+                    //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
+                    //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
+                }
             }
+            catch (Exception ex)
+            {
+                string errorMessage = "An error ocured while editing the ingredient!";
+                Logger.LogError(errorMessage, ex);
+                ErrorOccured(errorMessage);
+                 
+            }
+
 
         }
     }
