@@ -17,6 +17,19 @@ namespace DataAccessLayer.Repostitories
         {
             try
             {
+                if (File.Exists(_filePath))
+                {
+                    List<Ingredient> existingIngredients = await GetIngredients(null);
+
+                    bool alreadyExists = existingIngredients.Any(i =>
+                        i.IngredientName.Equals(ingredient.IngredientName, StringComparison.OrdinalIgnoreCase));
+
+                    if (alreadyExists)
+                    {
+                        ErrorOccured("Thist ingredient alreay exist!");
+                        return;
+                    }
+                }
                 int id = Math.Abs(Guid.NewGuid().GetHashCode());
 
                 using (StreamWriter sw = File.AppendText(_filePath))
@@ -67,10 +80,9 @@ namespace DataAccessLayer.Repostitories
                     ingredient.Price = decimal.Parse(values[4]);
                     ingredient.IngredientType = values[5];
 
-                    if (string.IsNullOrEmpty(name))
-                        ingredients.Add(ingredient);
-                    else if(!string.IsNullOrEmpty(name) && ingredient.IngredientName.ToLower().
-                        StartsWith(name.ToLower()))
+                    //check if the ingredient already extsts
+                    if (string.IsNullOrEmpty(name) ||
+                         ingredient.IngredientName.Contains(name, StringComparison.OrdinalIgnoreCase))
                         ingredients.Add(ingredient);
                 }
             }
