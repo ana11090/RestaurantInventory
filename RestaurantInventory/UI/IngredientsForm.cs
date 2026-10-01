@@ -22,6 +22,11 @@ namespace RestaurantInventory.UI
         // Every method the form calls here must be declared in IIngredientsRepositories.
         readonly IIngredientsRepositories _ingredientsRepository;
         private int _ingredientId;
+
+
+        //variables for sorting after the grid name columns
+        private string _sortColumn = null;
+        private bool _sortAscending = true;
         public IngredientsForm(IIngredientsRepositories ingredientsRepository)
         {
             InitializeComponent();
@@ -133,7 +138,8 @@ namespace RestaurantInventory.UI
         private async Task RefreshIngredientsGrid()
         {
             List<Ingredient> ingredients = await _ingredientsRepository.GetIngredients(txtSearch.Text);
-            ingredientsGrid.DataSource = ingredients;
+            // ingredientsGrid.DataSource = ingredients;
+            ingredientsGrid.DataSource = SortIngredients(ingredients);
         }
         private void IngredientsForm_Load(object sender, EventArgs e)
         {
@@ -167,12 +173,67 @@ namespace RestaurantInventory.UI
             {
                 Text = "Edit",
                 Name = "btnEdit",
-                HeaderText = "",
+                HeaderText = "", 
                 UseColumnTextForButtonValue = true
             };
 
             ingredientsGrid.Columns.Clear();
-            ingredientsGrid.Columns.AddRange(columns);
+            ingredientsGrid.Columns.AddRange(columns); 
+
+            ingredientsGrid.ColumnHeaderMouseClick += ingredientsGrid_ColumnHeaderMouseClick;
+        }
+
+        private void ingredientsGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            string clickedProperty = ingredientsGrid.Columns[e.ColumnIndex].DataPropertyName;
+
+            // Delete / Edit are button columns with no DataPropertyName — nothing to sort by.
+            if (string.IsNullOrEmpty(clickedProperty))
+                return;
+
+            if (_sortColumn == clickedProperty)
+                _sortAscending = !_sortAscending;   // same column clicked again → flip direction
+            else
+            {
+                _sortColumn = clickedProperty;
+                _sortAscending = true;
+            }
+
+            RefreshIngredientsGrid();
+        }
+
+        private List<Ingredient> SortIngredients(List<Ingredient> ingredients)
+        {
+            if (string.IsNullOrEmpty(_sortColumn))
+                return ingredients;
+
+            List<Ingredient> sorted;
+
+            switch (_sortColumn)
+            {
+                case "IngredientName":
+                    sorted = ingredients.OrderBy(i => i.IngredientName).ToList();
+                    break;
+                case "IngredientType":
+                    sorted = ingredients.OrderBy(i => i.IngredientType).ToList();
+                    break;
+                case "Weight":
+                    sorted = ingredients.OrderBy(i => i.Weight).ToList();
+                    break;
+                case "KcalPer100g":
+                    sorted = ingredients.OrderBy(i => i.KcalPer100g).ToList();
+                    break;
+                case "Price":
+                    sorted = ingredients.OrderBy(i => i.Price).ToList();
+                    break;
+                default:
+                    return ingredients;
+            }
+
+            if (!_sortAscending)
+                sorted.Reverse();
+
+            return sorted;
         }
 
         private void btnClearAllFields_Click(object sender, EventArgs e)
