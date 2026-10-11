@@ -41,6 +41,7 @@
             btnAddRecipe = new Button();
             btnRecipeIngredients = new Button();
             btnClearAllFields = new Button();
+            btnAddRecipeType = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvIngredients).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picImage).BeginInit();
             SuspendLayout();
@@ -110,7 +111,7 @@
             cmbTypeRecipe.Location = new Point(764, 113);
             cmbTypeRecipe.Margin = new Padding(2, 3, 2, 3);
             cmbTypeRecipe.Name = "cmbTypeRecipe";
-            cmbTypeRecipe.Size = new Size(227, 36);
+            cmbTypeRecipe.Size = new Size(111, 36);
             cmbTypeRecipe.TabIndex = 6;
             // 
             // picImage
@@ -165,11 +166,22 @@
             btnClearAllFields.Text = "Clear All Fields";
             btnClearAllFields.UseVisualStyleBackColor = true;
             // 
+            // btnAddRecipeType
+            // 
+            btnAddRecipeType.Location = new Point(895, 113);
+            btnAddRecipeType.Name = "btnAddRecipeType";
+            btnAddRecipeType.Size = new Size(94, 33);
+            btnAddRecipeType.TabIndex = 13;
+            btnAddRecipeType.Text = "Add";
+            btnAddRecipeType.UseVisualStyleBackColor = true;
+            btnAddRecipeType.Click += btnAddRecipeType_Click;
+            // 
             // RecipesForm
             // 
             AutoScaleDimensions = new SizeF(11F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1012, 555);
+            Controls.Add(btnAddRecipeType);
             Controls.Add(btnClearAllFields);
             Controls.Add(btnRecipeIngredients);
             Controls.Add(btnAddRecipe);
@@ -187,6 +199,7 @@
             Margin = new Padding(4);
             Name = "RecipesForm";
             Text = "RecipesForm";
+            Load += RecipesForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvIngredients).EndInit();
             ((System.ComponentModel.ISupportInitialize)picImage).EndInit();
             ResumeLayout(false);
@@ -208,5 +221,6 @@
         private Button btnAddRecipe;
         private Button btnRecipeIngredients;
         private Button btnClearAllFields;
+        private Button btnAddRecipeType;
     }
 }
