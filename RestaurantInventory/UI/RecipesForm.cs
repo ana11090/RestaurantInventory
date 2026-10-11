@@ -14,11 +14,13 @@ namespace RestaurantInventory.UI
     {
         private readonly IRecipeTypeRepostorycs _recipeTypeRepostorycs;
         private readonly IServiceProvider _serviceProvider;
+
         public RecipesForm(IRecipeTypeRepostorycs recipeTypeRepostorycs, IServiceProvider serviceProvider)
         {
             InitializeComponent();
             _recipeTypeRepostorycs = recipeTypeRepostorycs;
             _serviceProvider = serviceProvider;
+
         }
 
         private async Task RefreshRecipeTypes()
@@ -36,7 +38,14 @@ namespace RestaurantInventory.UI
         private void btnAddRecipeType_Click(object sender, EventArgs e)
         {
             RecipeTypesForm recipeTypesForm = _serviceProvider.GetRequiredService<RecipeTypesForm>();
+            //recipeTypesForm.FormClosed += OnRecipeTypeFormClosed;
+            recipeTypesForm.FormClosed += (sender, e) => RefreshRecipeTypes(); 
             recipeTypesForm.ShowDialog();
         }
+
+        //private void OnRecipeTypeFormClosed(object? sender, FormClosedEventArgs e)
+        //{
+        //    RefreshRecipeTypes();
+        //}
     }
 }

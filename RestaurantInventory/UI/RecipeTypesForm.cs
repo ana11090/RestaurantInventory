@@ -17,7 +17,13 @@ namespace RestaurantInventory.UI
         {
             InitializeComponent();
             _recipeTypeRepostorycs = recipeTypeRepostorycs;
+            _recipeTypeRepostorycs.OnError += message => MessageBox.Show(message);
         }
+
+        //private void OnErrorOcured(string message)
+        //{
+        //    MessageBox.Show(message);
+        //}
 
         private void RecipeTypesForm_Load(object sender, EventArgs e)
         {
