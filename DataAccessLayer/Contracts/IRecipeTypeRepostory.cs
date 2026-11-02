@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataAccessLayer.Contracts
 {
-    public interface IRecipeTypeRepostorycs
+    public interface IRecipeTypeRepostory
     {
         public event Action<string> OnError;
         public Task AddRecipeType(RecipeType recipeType);

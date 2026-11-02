@@ -12,8 +12,8 @@ namespace RestaurantInventory.UI
 {
     public partial class RecipeTypesForm : Form
     {
-        private readonly IRecipeTypeRepostorycs _recipeTypeRepostorycs;
-        public RecipeTypesForm(IRecipeTypeRepostorycs recipeTypeRepostorycs)
+        private readonly IRecipeTypeRepostory _recipeTypeRepostorycs;
+        public RecipeTypesForm(IRecipeTypeRepostory recipeTypeRepostorycs)
         {
             InitializeComponent();
             _recipeTypeRepostorycs = recipeTypeRepostorycs;

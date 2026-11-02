@@ -42,6 +42,7 @@
             btnRecipeIngredients = new Button();
             btnClearAllFields = new Button();
             btnAddRecipeType = new Button();
+            btnEditRecipe = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvIngredients).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picImage).BeginInit();
             SuspendLayout();
@@ -55,6 +56,8 @@
             dgvIngredients.RowHeadersWidth = 51;
             dgvIngredients.Size = new Size(594, 473);
             dgvIngredients.TabIndex = 0;
+            dgvIngredients.CellClick += dgvIngredients_CellClick;
+            dgvIngredients.CellContentClick += dgvIngredients_CellContentClick;
             // 
             // lbName
             // 
@@ -122,6 +125,7 @@
             picImage.Size = new Size(230, 128);
             picImage.TabIndex = 7;
             picImage.TabStop = false;
+            picImage.Click += picImage_Click;
             // 
             // rtbDecriptionRecipe
             // 
@@ -147,6 +151,7 @@
             btnAddRecipe.TabIndex = 10;
             btnAddRecipe.Text = "Add Recipe";
             btnAddRecipe.UseVisualStyleBackColor = true;
+            btnAddRecipe.Click += btnAddRecipe_Click;
             // 
             // btnRecipeIngredients
             // 
@@ -165,6 +170,7 @@
             btnClearAllFields.TabIndex = 12;
             btnClearAllFields.Text = "Clear All Fields";
             btnClearAllFields.UseVisualStyleBackColor = true;
+            btnClearAllFields.Click += btnClearAllFields_Click;
             // 
             // btnAddRecipeType
             // 
@@ -176,11 +182,22 @@
             btnAddRecipeType.UseVisualStyleBackColor = true;
             btnAddRecipeType.Click += btnAddRecipeType_Click;
             // 
+            // btnEditRecipe
+            // 
+            btnEditRecipe.Location = new Point(642, 412);
+            btnEditRecipe.Name = "btnEditRecipe";
+            btnEditRecipe.Size = new Size(349, 42);
+            btnEditRecipe.TabIndex = 14;
+            btnEditRecipe.Text = "Edit Recipe";
+            btnEditRecipe.UseVisualStyleBackColor = true;
+            btnEditRecipe.Click += btnEditRecipe_Click;
+            // 
             // RecipesForm
             // 
             AutoScaleDimensions = new SizeF(11F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1012, 555);
+            Controls.Add(btnEditRecipe);
             Controls.Add(btnAddRecipeType);
             Controls.Add(btnClearAllFields);
             Controls.Add(btnRecipeIngredients);
@@ -222,5 +239,6 @@
         private Button btnRecipeIngredients;
         private Button btnClearAllFields;
         private Button btnAddRecipeType;
+        private Button btnEditRecipe;
     }
 }

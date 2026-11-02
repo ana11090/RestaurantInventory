@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace DataAccessLayer.Repostitories
 {
-    public class RecipeTypeRepostorycs : IRecipeTypeRepostorycs
+    public class RecipeTypeRepostory : IRecipeTypeRepostory
     {
         public event Action<string> OnError;
 
@@ -30,7 +30,16 @@ namespace DataAccessLayer.Repostitories
                     //    connection.Execute(@"dbo.InsertIngredientProcedure @ingredientName, 
                     //ingredientType, @weight, @kcalPer100g, @price", ingredient); //using stored procedure
                 }
-            } 
+            }
+            catch (SqlException sqlEx)
+            {
+                string errorMessage = "";
+                if (sqlEx.Number == 2627)
+                    errorMessage = "That recipe already exists.";
+                else
+                    errorMessage = "An error happened in the database.";
+                ErrorOccured(errorMessage);
+            }
             catch (Exception ex)
             {
                 string errorMessage = "An error ocured while adding the recipe type. The recipe type wasn't added!";

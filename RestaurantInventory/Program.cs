@@ -44,7 +44,8 @@ namespace RestaurantInventory
             {
                 services.AddTransient<IIngredientsRepositories>(_ => new IngredientsSqlRepository());
             }
-            services.AddTransient<IRecipeTypeRepostorycs>(_ => new RecipeTypeRepostorycs());
+            services.AddTransient<IRecipeTypeRepostory>(_ => new RecipeTypeRepostory());
+            services.AddTransient<IRecipeRepostory>(_ => new RecipeRepostory());
 
 
             services.AddTransient<IngredientsForm>();
