@@ -91,8 +91,9 @@ namespace DataAccessLayer.Repostitories
             {
                 string query = @"update Recipes
                                  set name         = @RecipeName,
-                                     description  = @RecipeDescription,
-                                     recipeTypeId = @RecipeTypeId
+                                     description  = @RecipeDescription," + 
+                                     (recipe.RecipeImage!=null? "image=@RecipeImage," :"")+
+                                     @"recipeTypeId = @RecipeTypeId
                                  where id = @Id";
 
                 using (IDbConnection connection = new SqlConnection(ConnectionHelper.GetConnectionStringSettings))

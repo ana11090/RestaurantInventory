@@ -49,8 +49,15 @@ namespace RestaurantInventory.UI
 
         private async Task RefreshRecipeTypes()
         {
-            cmbTypeRecipe.DataSource = await _recipeTypeRepostorycs.GetRecipeType();
+            List<RecipeType> recipeTypes = await _recipeTypeRepostorycs.GetRecipeType();
+            cmbTypeRecipe.DataSource = recipeTypes;
             cmbTypeRecipe.DisplayMember = "Name"; //display only Name, not Id too
+
+            List<RecipeType> filterRecipeTypes = recipeTypes;
+            filterRecipeTypes.Add(new RecipeType("All types", 0));
+            cmbRecipeFilter.DataSource = recipeTypes;
+            cmbRecipeFilter.DisplayMember = "Name";
+
 
         }
         private async void RefreshRecipesGrid()
@@ -218,7 +225,7 @@ namespace RestaurantInventory.UI
 
         }
 
-        private async void  btnEditRecipe_Click(object sender, EventArgs e)
+        private async void btnEditRecipe_Click(object sender, EventArgs e)
         {
             if (!IsValid())
                 return;
@@ -235,6 +242,11 @@ namespace RestaurantInventory.UI
             ClearAllFields();
             RefreshRecipesGrid();
             btnEditRecipe.Visible = false;
+        }
+
+        private void cmbTypeRecipe_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
         //private void OnRecipeTypeFormClosed(object? sender, FormClosedEventArgs e)
         //{

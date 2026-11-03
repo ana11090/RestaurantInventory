@@ -116,6 +116,7 @@
             cmbTypeRecipe.Name = "cmbTypeRecipe";
             cmbTypeRecipe.Size = new Size(111, 36);
             cmbTypeRecipe.TabIndex = 6;
+            cmbTypeRecipe.SelectedIndexChanged += cmbTypeRecipe_SelectedIndexChanged;
             // 
             // picImage
             // 

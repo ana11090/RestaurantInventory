@@ -11,7 +11,18 @@ namespace DomainModel.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public int RecipeTypeId { get; set; }
+        public RecipeType(string name)
+        {
+            Name = name;
+        }
 
+        public RecipeType(string name, int id)
+        {
+            Id = id;
+            Name = name;
+
+        }
+        public RecipeType() { }
     }
 
 
