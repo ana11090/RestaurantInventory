@@ -102,10 +102,10 @@
             // cmbRecipeFilter
             // 
             cmbRecipeFilter.FormattingEnabled = true;
-            cmbRecipeFilter.Location = new Point(20, 22);
+            cmbRecipeFilter.Location = new Point(9, 22);
             cmbRecipeFilter.Margin = new Padding(2, 3, 2, 3);
             cmbRecipeFilter.Name = "cmbRecipeFilter";
-            cmbRecipeFilter.Size = new Size(589, 36);
+            cmbRecipeFilter.Size = new Size(594, 36);
             cmbRecipeFilter.TabIndex = 5;
             // 
             // cmbTypeRecipe
@@ -116,7 +116,6 @@
             cmbTypeRecipe.Name = "cmbTypeRecipe";
             cmbTypeRecipe.Size = new Size(111, 36);
             cmbTypeRecipe.TabIndex = 6;
-            cmbTypeRecipe.SelectedIndexChanged += cmbTypeRecipe_SelectedIndexChanged;
             // 
             // picImage
             // 

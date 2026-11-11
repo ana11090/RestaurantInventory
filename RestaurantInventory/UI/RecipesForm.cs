@@ -31,6 +31,7 @@ namespace RestaurantInventory.UI
 
         private bool _isUserImageAdded = false;
         private int _recipeToEditId;
+        private List<RecipeWithType> _recipeCache;
         public RecipesForm(IRecipeRepostory recipeRepostorycs, IRecipeTypeRepostory recipeTypeRepostorycs, IServiceProvider serviceProvider)
         {
             InitializeComponent();
@@ -49,6 +50,9 @@ namespace RestaurantInventory.UI
 
         private async Task RefreshRecipeTypes()
         {
+            RecipeType previouslySelectedFilter = cmbRecipeFilter.SelectedItem as RecipeType;
+            RecipeType previouslySelectedRecipeType = cmbTypeRecipe.SelectedItem as RecipeType;
+
             List<RecipeType> recipeTypes = await _recipeTypeRepostorycs.GetRecipeType();
             cmbTypeRecipe.DataSource = recipeTypes;
             cmbTypeRecipe.DisplayMember = "Name"; //display only Name, not Id too
@@ -58,20 +62,47 @@ namespace RestaurantInventory.UI
             cmbRecipeFilter.DataSource = recipeTypes;
             cmbRecipeFilter.DisplayMember = "Name";
 
+            if (previouslySelectedFilter != null && previouslySelectedFilter.Id != 0)
+            {
+                int indexToSelect = FindRecipeTypeIndex(previouslySelectedFilter.Id);
+                cmbRecipeFilter.SelectedIndex = indexToSelect + 1;
+            }
 
+            if (previouslySelectedRecipeType != null && previouslySelectedRecipeType.Id!= 0)
+            {
+               int indexToSelect = FindRecipeTypeIndex(previouslySelectedRecipeType.Id);
+                cmbTypeRecipe.SelectedIndex = indexToSelect;
+            }
         }
-        private async void RefreshRecipesGrid()
+        private async Task RefreshRecipesCache()
         {
-            dgvIngredients.DataSource = await _recipeRepostorycs.GetRecipes();
+            //dgvIngredients.DataSource = await _recipeRepostorycs.GetRecipes();
+           _recipeCache = await _recipeRepostorycs.GetRecipes();
+            FilterGridData();
         }
 
-        private void RecipesForm_Load(object sender, EventArgs e)
+        private void FilterGridData()
+        {
+            RecipeType selectedItem = cmbRecipeFilter.SelectedItem as RecipeType;
+
+            if (selectedItem.Id == 0) {
+                dgvIngredients.DataSource = _recipeCache;
+            }
+            else
+            {
+                dgvIngredients.DataSource = _recipeCache.Where(r=>r.RecipeTypeId == selectedItem.Id).ToList();
+            }
+
+        }
+
+        private async void RecipesForm_Load(object sender, EventArgs e)
         {
             btnEditRecipe.Visible = false;
             picImage.SizeMode = PictureBoxSizeMode.StretchImage;
             ClearAllFields();
-            RefreshRecipeTypes();
-            RefreshRecipesGrid();
+            await RefreshRecipeTypes();
+             RefreshRecipesCache();
+            cmbRecipeFilter.SelectedIndexChanged += cmbTypeRecipe_SelectedIndexChanged;
             CustomizeGridAppearance();
         }
 
@@ -97,7 +128,7 @@ namespace RestaurantInventory.UI
 
             _recipeRepostorycs.AddRecipe(recipe);
             ClearAllFields();
-            RefreshRecipesGrid();
+            RefreshRecipesCache();
         }
         private void CustomizeGridAppearance()
         {
@@ -190,7 +221,7 @@ namespace RestaurantInventory.UI
                 if (dgvIngredients.CurrentCell.OwningColumn.Name == "DeleteBtn")
                 {
                     await _recipeRepostorycs.DeleteRecipe(clickedRecipe.Id);
-                    RefreshRecipesGrid();
+                    RefreshRecipesCache();
                 }
                 else if (dgvIngredients.CurrentCell.OwningColumn.Name == "EditBtn")
                 {
@@ -240,13 +271,13 @@ namespace RestaurantInventory.UI
 
             await _recipeRepostorycs.EditRecipe(recipe);
             ClearAllFields();
-            RefreshRecipesGrid();
+            RefreshRecipesCache();
             btnEditRecipe.Visible = false;
         }
 
         private void cmbTypeRecipe_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            FilterGridData();
         }
         //private void OnRecipeTypeFormClosed(object? sender, FormClosedEventArgs e)
         //{
